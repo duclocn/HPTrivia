@@ -29,4 +29,5 @@ App Development Plan:
 - Instructions screen
 - Books
 - Persist scores
+ 🟪 ✅
 */
