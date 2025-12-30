@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var animateViewIn = false
+    @State private var scalePlayButton = false
     
     var body: some View {
         GeometryReader { geo in
@@ -44,18 +45,49 @@ struct ContentView: View {
                             .transition(.move(edge: .top))
                         }//if
                     }//VStack
-                    .animation(.easeInOut(duration: 0.7).delay(2), value: animateViewIn)
                     
                     Spacer()
+                    
+                    Spacer()
+                    
+                    Spacer()
+                    
+                    VStack {
+                        if animateViewIn {
+                            Button {
+                                
+                            } label: {
+                                Text("Play")
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.white)
+                                    .padding(.vertical, 7)
+                                    .padding(.horizontal, 50)
+                                    .background(.brown)
+                                    .clipShape(.rect(cornerRadius: 7))
+                                    .shadow(radius: 5)
+                                    .scaleEffect(scalePlayButton ? 1.2 : 1)
+                                    .onAppear() {
+                                        withAnimation(.easeInOut(duration: 1.3).repeatForever()) {
+                                            scalePlayButton.toggle()
+                                        }
+                                    }
+                            }
+                            .transition(.offset(y: geo.size.height / 3))
+                        }// if
+                    }// VStack
+                    
+                    Spacer()
+                    
                 }//VStack
             }// ZStack
             .frame(width: geo.size.width, height: geo.size.height)
+            .animation(.easeInOut(duration: 0.7).delay(2), value: animateViewIn)
         }//Geo
         .ignoresSafeArea()
         .onAppear() {
             animateViewIn = true
             playAudio(fileName: "magic-in-the-air", fileType: "mp3")
-        }
+        }//onAppear
     }
 }
 
