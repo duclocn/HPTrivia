@@ -26,7 +26,7 @@ App Development Plan:
  🟪 Animations
 - In-app purchases
 - Store
- 🟪 Instructions screen
+ ✅ Instructions screen
 - Books
 - Persist scores
  🟪 ✅
