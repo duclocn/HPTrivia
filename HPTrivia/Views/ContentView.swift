@@ -54,6 +54,7 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear() {
             animateViewIn = true
+            playAudio(fileName: "magic-in-the-air", fileType: "mp3")
         }
     }
 }
