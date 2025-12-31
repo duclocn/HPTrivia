@@ -16,5 +16,3 @@ func playAudio(fileName: String, fileType: String) {
     audioPlayer?.numberOfLoops = -1 // Loop Forever
     audioPlayer?.play()
 }
-
-
