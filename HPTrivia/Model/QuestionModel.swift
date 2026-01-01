@@ -1,5 +1,5 @@
 //
-//  Question.swift
+//  QuestionModel.swift
 //  HPTrivia
 //
 //  Created by Loc Nguyen on 12/26/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Question: Decodable {
+struct QuestionModel: Decodable {
     let id: Int
     let question: String
     let answer: String
