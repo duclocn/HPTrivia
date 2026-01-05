@@ -15,4 +15,3 @@ struct QuestionModel: Decodable {
     let book: Int
     let hint: String
 }
-    

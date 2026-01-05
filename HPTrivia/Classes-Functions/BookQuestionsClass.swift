@@ -32,25 +32,28 @@ class BookQuestions {
     }
     
     private func organizeQuestions(_ questions: [QuestionModel]) -> [[QuestionModel]] {
-        var organizedQuestions: [[QuestionModel]] = [[], [], [], [], [], [], []]
+        var organizedQuestions: [[QuestionModel]] = [[], [], [], [], [], [], [], []]
         
         for question in questions {
             // question.book là 1-7, cần trừ 1 để map về index 0-6
-            let index = question.book - 1
-            guard index >= 0 && index < organizedQuestions.count else { continue }
-            organizedQuestions[index].append(question)
+//            let index = question.book - 1
+            organizedQuestions[question.book].append(question)
         }
         
         return organizedQuestions
     }
     
     private func populateBooks(with organizedQuestions: [[QuestionModel]]) {
-        books.append(BookModel(id: 1, image: "hp1", questions: organizedQuestions[0], status: .active))
-        books.append(BookModel(id: 2, image: "hp2", questions: organizedQuestions[1], status: .active))
-        books.append(BookModel(id: 3, image: "hp3", questions: organizedQuestions[2], status: .inactive))
-        books.append(BookModel(id: 4, image: "hp4", questions: organizedQuestions[3], status: .locked))
-        books.append(BookModel(id: 5, image: "hp5", questions: organizedQuestions[4], status: .locked))
-        books.append(BookModel(id: 6, image: "hp6", questions: organizedQuestions[5], status: .locked))
-        books.append(BookModel(id: 7, image: "hp7", questions: organizedQuestions[6], status: .locked))
+        books.append(BookModel(id: 1, image: "hp1", questions: organizedQuestions[1], status: .active))
+        books.append(BookModel(id: 2, image: "hp2", questions: organizedQuestions[2], status: .active))
+        books.append(BookModel(id: 3, image: "hp3", questions: organizedQuestions[3], status: .inactive))
+        books.append(BookModel(id: 4, image: "hp4", questions: organizedQuestions[4], status: .locked))
+        books.append(BookModel(id: 5, image: "hp5", questions: organizedQuestions[5], status: .locked))
+        books.append(BookModel(id: 6, image: "hp6", questions: organizedQuestions[6], status: .locked))
+        books.append(BookModel(id: 7, image: "hp7", questions: organizedQuestions[7], status: .locked))
+    }
+    
+    func changeStatus(of id: Int, to status: BookStatus) {
+        books[id - 1].status = status
     }
 }

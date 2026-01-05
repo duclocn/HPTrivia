@@ -12,10 +12,10 @@ struct BookModel: Decodable, Identifiable {
     let image: String
     let questions: [QuestionModel]
     var status: BookStatus
-    
-    enum BookStatus: Decodable {
-        case locked
-        case active
-        case inactive
-    }
+}
+
+enum BookStatus: Decodable {
+    case locked
+    case active
+    case inactive
 }

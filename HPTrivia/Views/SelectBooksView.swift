@@ -11,6 +11,8 @@ struct SelectBooksView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Game.self) private var game
     
+    @State private var showTempAlert = false
+    
     var body: some View {
         ZStack {
             Image(.parchment)
@@ -41,19 +43,47 @@ struct SelectBooksView: View {
                                         .shadow(radius: 1)
                                         .padding(3)
                                 }
+                                .onTapGesture {
+                                    game.bookQuestions.changeStatus(of: book.id, to: .inactive)
+                                }
                             } else if book.status == .inactive {
                                 ZStack(alignment: .bottomTrailing) {
                                     Image(book.image)
                                         .resizable()
                                         .scaledToFit()
                                         .shadow(radius: 7)
+                                        .overlay {
+                                            Rectangle().opacity(0.5)
+                                        }
+                                    
+                                    Image(systemName: "circle")
+                                        .font(.largeTitle)
+                                        .imageScale(.large)
+                                        .foregroundStyle(.green.opacity(0.5))
+                                        .shadow(radius: 1)
+                                        .padding(3)
+                                }
+                                .onTapGesture {
+                                    game.bookQuestions.changeStatus(of: book.id, to: .active)
                                 }
                             } else {
-                                ZStack(alignment: .bottomTrailing) {
+                                ZStack {
                                     Image(book.image)
                                         .resizable()
                                         .scaledToFit()
                                         .shadow(radius: 7)
+                                        .overlay {
+                                            Rectangle().opacity(0.75)
+                                        }
+                                    
+                                    Image(systemName: "lock.fill")
+                                        .font(.largeTitle)
+                                        .imageScale(.large)
+                                        .shadow(color: .white, radius: 2)
+                                }
+                                .onTapGesture {
+                                    showTempAlert.toggle()
+                                    game.bookQuestions.changeStatus(of: book.id, to: .active)
                                 }
                             }
                         }
@@ -72,6 +102,8 @@ struct SelectBooksView: View {
                 .foregroundStyle(.white)
             }
         }//ZStack
+        .alert("You purchased a new question pack. Yay!", isPresented: $showTempAlert) {
+        }
     }
 }
 
