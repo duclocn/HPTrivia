@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var animateViewIn = false
     
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -43,4 +44,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(Game())
 }
