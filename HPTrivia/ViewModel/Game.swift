@@ -18,7 +18,7 @@ class Game {
     var activeQuestion: [QuestionModel] = []
     var answeredQuestion: [Int] = []
     var currentQuestion: QuestionModel = try! JSONDecoder().decode([QuestionModel].self, from: Data(contentsOf: Bundle.main.url(forResource: "trivia", withExtension: "json")!))[0]
-    var answer: [String] = []
+    var answers: [String] = []
     
     func startGame() {
         for book in bookQuestions.books {
@@ -33,11 +33,33 @@ class Game {
     }
     
     func newQuestion() {
+        if answeredQuestion.count == activeQuestion.count {
+            answeredQuestion = []
+        }
         
+        currentQuestion = activeQuestion.randomElement()!
+        
+        while(answeredQuestion.contains(currentQuestion.id)) {
+            currentQuestion = activeQuestion.randomElement()!
+        }
+        
+        answers = []
+        
+        answers.append(currentQuestion.answer)
+        
+        for wrongAnswer in currentQuestion.wrong {
+            answers.append(wrongAnswer)
+        }
+        
+        answers.shuffle()
+        
+        questionScore = 5
     }
     
     func correct() {
+        answeredQuestion.append(currentQuestion.id)
         
+        gameScore += questionScore
     }
     
     func endGame() {
