@@ -8,7 +8,7 @@
 import Foundation
 import AVKit
 
-private var audioPlayer: AVAudioPlayer?
+var audioPlayer: AVAudioPlayer?
 
 func playAudio(fileName: String, fileType: String) {
     let sound = Bundle.main.path(forResource: fileName, ofType: fileType)

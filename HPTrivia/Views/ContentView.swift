@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct ContentView: View {
     @State private var animateViewIn = false
+    @State private var playGame = false
     
     var body: some View {
         GeometryReader { geo in
@@ -24,7 +26,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    ButtonBarView(animateViewIn: $animateViewIn, geo: geo)
+                    ButtonBarView(animateViewIn: $animateViewIn, playGame: $playGame, geo: geo)
                     
                     Spacer()
                     
@@ -36,8 +38,17 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear() {
             animateViewIn = true
-            //playAudio(fileName: "magic-in-the-air", fileType: "mp3")
+            playAudio(fileName: "magic-in-the-air", fileType: "mp3")
         }//onAppear
+        .fullScreenCover(isPresented: $playGame) {
+            GameplayView()
+                .onAppear {
+                    audioPlayer?.setVolume(0, fadeDuration: 2)
+                }
+                .onDisappear {
+                    audioPlayer?.setVolume(1, fadeDuration: 3)
+                }
+        }
     }
 }
 

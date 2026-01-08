@@ -22,7 +22,7 @@ struct HPTriviaApp: App {
 /**
 App Development Plan:
  🟦 Game Intro screen
-- Gameplay screen
+ 🟪 Gameplay screen
  🟪  Game logic (questions, scores, etc.)
 - Celebration
  🟪 Audio
