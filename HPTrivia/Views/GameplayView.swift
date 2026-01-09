@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct GameplayView: View {
+    @Environment(Game.self) private var game
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -37,9 +40,17 @@ struct GameplayView: View {
             .frame(width: geo.size.width, height: geo.size.height)
         }
         .ignoresSafeArea()
+        .onAppear {
+            game.startGame()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                playAMusic()
+            }
+        }
     }
 }
 
 #Preview {
     GameplayView()
+        .environment(Game())
 }

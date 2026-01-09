@@ -38,7 +38,7 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear() {
             animateViewIn = true
-            playAudio(fileName: "magic-in-the-air", fileType: "mp3")
+            //playAudio(fileName: "magic-in-the-air", fileType: "mp3")
         }//onAppear
         .fullScreenCover(isPresented: $playGame) {
             GameplayView()
