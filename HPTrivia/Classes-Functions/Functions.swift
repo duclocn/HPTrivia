@@ -31,8 +31,8 @@ func playAMusic() {
     playMusic.play()
 }
 
-func sfxAudio(fileName: String, fileType: String) {
-    let sound = Bundle.main.path(forResource: fileName, ofType: fileType)
+func sfxAudio(fileName: String) {
+    let sound = Bundle.main.path(forResource: fileName, ofType: "mp3")
     sfxPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
     sfxPlayer.play()
 }

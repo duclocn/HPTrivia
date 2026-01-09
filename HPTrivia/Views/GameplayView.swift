@@ -12,6 +12,7 @@ struct GameplayView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var animateViewIn: Bool = false
+    @State private var revealHint: Bool = false
     
     var body: some View {
         GeometryReader { geo in
@@ -56,8 +57,65 @@ struct GameplayView: View {
                     Spacer()
                     
                     // MARK: Hints
+                    HStack {
+                        VStack {
+                            if animateViewIn {
+                                Image(systemName: "questionmark.app.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100)
+                                    .foregroundStyle(.cyan)
+                                    .padding()
+                                    .transition(.offset(x: -geo.size.width/2))
+                                    .phaseAnimator([false, true]) { content, phase in
+                                        content
+                                            .rotationEffect(.degrees(phase ? -13 : -17))
+                                    } animation: { _ in
+                                            .easeInOut(duration: 0.7)
+                                    }
+                                    .onTapGesture {
+                                        withAnimation {
+                                            revealHint.toggle()
+                                        }
+                                        sfxAudio(fileName: "page-flip")
+                                        game.questionScore -= 1
+                                    }
+                                    .rotation3DEffect(.degrees(revealHint ? 1440 : 0), axis: (x: 0, y: 1, z: 0))
+                                    .scaleEffect(revealHint ? 5 : 1)
+                                    .offset(x: revealHint ? geo.size.width/2 : 0)
+                                    .opacity(revealHint ? 0 : 1)
+                                    .overlay {
+                                        Text(game.currentQuestion.hint)
+                                            .padding(.leading, 20)
+                                            .minimumScaleFactor(0.5)
+                                            .multilineTextAlignment(.center)
+                                            .opacity(revealHint ? 1: 0)
+                                            .scaleEffect(revealHint ? 1.33 : 0)
+                                    } 
+                            }
+                        }
+                        .animation(.easeOut(duration: 1.5).delay(2), value: animateViewIn)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "questionmark.app.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
+                            .foregroundStyle(.cyan)
+                            .padding()
+                            .transition(.offset(x: -geo.size.width/2))
+                            .phaseAnimator([false, true]) { content, phase in
+                                content
+                                    .rotationEffect(.degrees(phase ? -17 : -13))
+                            }animation: { _ in
+                                    .easeInOut(duration: 0.7)
+                            }
+                    }
+                    .padding()
                     
                     // MARK: Answers
+                    Spacer()
                     
                 }
                 .frame(width: geo.size.width, height: geo.size.height)
@@ -77,7 +135,7 @@ struct GameplayView: View {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                playAMusic()
+                //playAMusic()
             }
         }
     }
