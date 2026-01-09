@@ -13,6 +13,7 @@ struct GameplayView: View {
     
     @State private var animateViewIn: Bool = false
     @State private var revealHint: Bool = false
+    @State private var revealBook: Bool = false
     
     var body: some View {
         GeometryReader { geo in
@@ -91,26 +92,57 @@ struct GameplayView: View {
                                             .multilineTextAlignment(.center)
                                             .opacity(revealHint ? 1: 0)
                                             .scaleEffect(revealHint ? 1.33 : 0)
-                                    } 
+                                    }
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewIn)
                         
                         Spacer()
                         
-                        Image(systemName: "questionmark.app.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100)
-                            .foregroundStyle(.cyan)
-                            .padding()
-                            .transition(.offset(x: -geo.size.width/2))
-                            .phaseAnimator([false, true]) { content, phase in
-                                content
-                                    .rotationEffect(.degrees(phase ? -17 : -13))
-                            }animation: { _ in
-                                    .easeInOut(duration: 0.7)
+                        VStack {
+                            if animateViewIn {
+                                Image(systemName: "app.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100)
+                                    .foregroundStyle(.cyan)
+                                    .overlay {
+                                        Image(systemName: "book.closed")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 50)
+                                            .foregroundStyle(.black)
+                                    }
+                                    .padding()
+                                    .transition(.offset(x: geo.size.width/2))
+                                    .phaseAnimator([false, true]) { content, phase in
+                                        content
+                                            .rotationEffect(.degrees(phase ? 13 : 17))
+                                    } animation: { _ in
+                                            .easeInOut(duration: 0.7)
+                                    }
+                                    .onTapGesture {
+                                        withAnimation {
+                                            revealBook.toggle()
+                                        }
+                                        sfxAudio(fileName: "page-flip")
+                                        game.questionScore -= 1
+                                    }
+                                    .rotation3DEffect(.degrees(revealBook ? -1440 : 0), axis: (x: 0, y: 1, z: 0))
+                                    .scaleEffect(revealBook ? 5 : 1)
+                                    .offset(x: revealBook ? -geo.size.width/2 : 0)
+                                    .opacity(revealBook ? 0 : 1)
+                                    .overlay {
+                                        Image("hp\(game.currentQuestion.book)")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .padding(.trailing, 20)
+                                            .opacity(revealBook ? 1: 0)
+                                            .scaleEffect(revealBook ? 1.33 : 0)
+                                    }
                             }
+                        }
+                        .animation(.easeOut(duration: 1.5).delay(2), value: animateViewIn)
                     }
                     .padding()
                     
