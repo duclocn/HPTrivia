@@ -20,7 +20,7 @@ func playAudio(fileName: String, fileType: String) {
 }
 
 func playAMusic() {
-    let songs = ["deep-in-the-hell", "let-my-mystery-unfold", "spellcraft", "hiding-place-in-the-forest"]
+    let songs = ["deep-in-the-dell", "let-the-mystery-unfold", "spellcraft", "hiding-place-in-the-forest"]
     
     let song = songs.randomElement()!
     
