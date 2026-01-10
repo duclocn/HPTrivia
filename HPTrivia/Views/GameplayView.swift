@@ -10,11 +10,13 @@ import SwiftUI
 struct GameplayView: View {
     @Environment(Game.self) private var game
     @Environment(\.dismiss) private var dismiss
+    @Namespace private var namespace
     
     @State private var animateViewIn: Bool = false
     @State private var revealHint: Bool = false
     @State private var revealBook: Bool = false
     @State private var tappedCorrectAnswer: Bool = false
+    @State private var wrongAnswersTapped: [String] = []
     
     var body: some View {
         GeometryReader { geo in
@@ -153,20 +155,25 @@ struct GameplayView: View {
                             if answer == game.currentQuestion.answer {
                                 VStack {
                                     if animateViewIn {
-                                        Button {
-                                            tappedCorrectAnswer = true
-                                            sfxAudio(fileName: "magic-wand")
-                                            game.correct()
-                                        } label: {
-                                            Text(answer)
-                                                .minimumScaleFactor(0.5)
-                                                .multilineTextAlignment(.center)
-                                                .padding(10)
-                                                .frame(width: geo.size.width/2.15, height: 80)
-                                                .background(.green.opacity(0.5))
-                                                .clipShape(.rect(cornerRadius: 25))
+                                        if !tappedCorrectAnswer {
+                                            Button {
+                                                withAnimation(.easeOut(duration: 1)) {
+                                                    tappedCorrectAnswer = true
+                                                }
+                                                sfxAudio(fileName: "magic-wand")
+                                                game.correct()
+                                            } label: {
+                                                Text(answer)
+                                                    .minimumScaleFactor(0.5)
+                                                    .multilineTextAlignment(.center)
+                                                    .padding(10)
+                                                    .frame(width: geo.size.width/2.15, height: 80)
+                                                    .background(.green.opacity(0.5))
+                                                    .clipShape(.rect(cornerRadius: 25))
+                                                    .matchedGeometryEffect(id: 1, in:  namespace)
+                                            }
+                                            .transition(.asymmetric(insertion: .scale, removal: .scale(scale: 15).combined(with: .opacity)))
                                         }
-                                        .transition(.scale)
                                     }//If
                                 }//VStack
                                 .animation(.easeOut(duration: 1).delay(1.5), value: animateViewIn)
@@ -174,6 +181,10 @@ struct GameplayView: View {
                                 VStack {
                                     if animateViewIn {
                                         Button {
+                                            withAnimation(.easeInOut(duration: 0.5)) {
+                                                wrongAnswersTapped.append(answer)
+                                            }
+                                            
                                             sfxAudio(fileName: "negative-beeps")
                                             game.questionScore -= 1
                                         } label: {
@@ -182,10 +193,13 @@ struct GameplayView: View {
                                                 .multilineTextAlignment(.center)
                                                 .padding(10)
                                                 .frame(width: geo.size.width/2.15, height: 80)
-                                                .background(.green.opacity(0.5))
+                                                .background(wrongAnswersTapped.contains(answer) ? .red.opacity(0.5) : .green.opacity(0.5))
                                                 .clipShape(.rect(cornerRadius: 25))
+                                                .scaleEffect(wrongAnswersTapped.contains(answer) ? 0.8 : 1)
                                         }
                                         .transition(.scale)
+                                        .sensoryFeedback(.error, trigger: wrongAnswersTapped)
+                                        .disabled(wrongAnswersTapped.contains(answer))
                                     }//If
                                 }//VStack
                                 .animation(.easeOut(duration: 1).delay(1.5), value: animateViewIn)
@@ -196,8 +210,21 @@ struct GameplayView: View {
                 }
                 .frame(width: geo.size.width, height: geo.size.height)
                 Spacer()
-                // MARK: Celebration
                 
+                // MARK: Celebration
+                VStack {
+                    if tappedCorrectAnswer {
+                        Text(game.currentQuestion.answer)
+                            .minimumScaleFactor(0.5)
+                            .multilineTextAlignment(.center)
+                            .padding(10)
+                            .frame(width: geo.size.width/2.15, height: 80)
+                            .background(.green.opacity(0.5))
+                            .clipShape(.rect(cornerRadius: 25))
+                            .scaleEffect(2)
+                            .matchedGeometryEffect(id: 1, in:  namespace)
+                    }
+                }//VStack
             }
             .frame(width: geo.size.width, height: geo.size.height)
             .foregroundStyle(.white)
