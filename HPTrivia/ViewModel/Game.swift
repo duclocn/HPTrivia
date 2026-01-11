@@ -59,7 +59,9 @@ class Game {
     func correct() {
         answeredQuestion.append(currentQuestion.id)
         
-        gameScore += questionScore
+        withAnimation {
+            gameScore += questionScore
+        }
     }
     
     func endGame() {
